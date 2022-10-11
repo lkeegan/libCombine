@@ -130,8 +130,8 @@ foreach(current ${EXTRA_LIBS})
   SET(ACTUAL_EXTRA_LIBS ${ACTUAL_EXTRA_LIBS} ${CUR_PATH})
 endforeach()
 set(EXTRA_LIBS ${ACTUAL_EXTRA_LIBS})
-message("${EXTRA_LIBS}")
 endif()
+message("${EXTRA_LIBS}")
 
 ###############################################################################
 #
@@ -521,11 +521,13 @@ endif()
 set (LIBSBML_HAS_MINIZIP)
 if (LIBSBML_LIBRARY)
   SET(CMAKE_REQUIRED_LIBRARIES ${LIBSBML_LIBRARY} ${LIBZ_LIBRARY} ${EXTRA_LIBS})
-  if(${CMAKE_VERSION} VERSION_LESS "3.1.0")
-    CHECK_FUNCTION_EXISTS(zipOpen3 LIBSBML_HAS_MINIZIP)
-  else()
-    CHECK_SYMBOL_EXISTS(zipOpen3 ${LIBSBML_INCLUDE_DIR}/sbml/compress/zip.h LIBSBML_HAS_MINIZIP)
-  endif()
+  SET(CMAKE_REQUIRED_INCLUDES ${LIBSBML_INCLUDE_DIR}/sbml/compress)
+  CHECK_CXX_SOURCE_COMPILES(
+    "#include <zip.h>
+    int main() {zipOpen3(0, 0, 0, 0, 0);}
+    "
+    LIBSBML_HAS_MINIZIP
+    )
 endif()
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/submodules/zipper/minizip AND NOT LIBSBML_HAS_MINIZIP)
