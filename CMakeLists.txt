@@ -123,12 +123,14 @@ set(EXTRA_INCLUDE "" CACHE STRING "List of additional include directories to add
 set(EXTRA_DEFS "" CACHE STRING "List of additional flag to add." )
 
 SET(ACTUAL_EXTRA_LIBS)
-if (EXTRA_LIBS AND NOT UNIX)
+message("${EXTRA_LIBS}")
+if (EXTRA_LIBS AND NOT UNIX AND NOT MSYS)
 foreach(current ${EXTRA_LIBS})
   file(TO_CMAKE_PATH "${current}" CUR_PATH)
   SET(ACTUAL_EXTRA_LIBS ${ACTUAL_EXTRA_LIBS} ${CUR_PATH})
 endforeach()
 set(EXTRA_LIBS ${ACTUAL_EXTRA_LIBS})
+message("${EXTRA_LIBS}")
 endif()
 
 ###############################################################################
